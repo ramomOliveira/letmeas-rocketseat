@@ -10,6 +10,7 @@ import { useAuth } from '../hooks/useAuth';
 import { database } from '../services/firebase';
 import { Question } from '../components/Question';
 import { useRoom } from '../hooks/useRoom';
+import Modal from '../components/Modal';
 
 
 type RoomParams = {
@@ -17,6 +18,7 @@ type RoomParams = {
 }
 
 export function Room() {
+  const [showModal, setShowModal] = useState(false);
   const { user } = useAuth();
   const params = useParams<RoomParams>();
   const [newQuestion, setNewQuestion] = useState('');
@@ -122,7 +124,12 @@ export function Room() {
             )
           })}
         </div>
+        <button type='button' onClick={() => setShowModal(true)}>teste</button>
       </main>
+      {
+        showModal && (<Modal title='Encerrar sala' description='Tem certeza que você deseja encerrar esta sela?' show={showModal} onClose={() => setShowModal(false)} />)
+      }
+
     </div>
   )
 }
