@@ -2,6 +2,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import { useState } from 'react';
 
+import checkImg from '../assets/images/check.svg';
+import answerImg from '../assets/images/answer.svg';
 import deleteImg from '../assets/images/delete.svg';
 import logoImg from '../assets/images/logo.svg';
 import { Button } from '../components/Button';
@@ -23,6 +25,8 @@ type RoomParams = {
 
 export function AdminRoom() {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModalCheck, setShowModalCheck] = useState<boolean>(false);
+  const [showModalAnswer, setShowModalAnswer] = useState<boolean>(false);
   const [showModalEndRoom, setShowModalEndRoom] = useState<boolean>(false);
   const [selected, setSelected] = useState<string | undefined>(undefined);
   // const { user } = useAuth();
@@ -43,6 +47,21 @@ export function AdminRoom() {
   async function handleDeleteQuestion() {
     await database.ref(`rooms/${roomId}/questions/${selected}`).remove();
     setShowModal(false);
+  }
+
+  async function handleCheckQuestionAsAnswered() {
+    await database.ref(`rooms/${roomId}/questions/${selected}`).update({
+      isAnswered: true,
+    })
+    setShowModalCheck(false);
+
+  }
+
+  async function handleHighlightQuestion() {
+    await database.ref(`rooms/${roomId}/questions/${selected}`).update({
+      isHighlighted: true,
+    })
+    setShowModalAnswer(false);
   }
 
 
@@ -73,7 +92,33 @@ export function AdminRoom() {
                 key={question.id}
                 content={question.content}
                 author={question.author}
+                isHighlighted={question.isHighlighted}
+                isAnswered={question.isAnswered}
               >
+                {!question.isAnswered && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowModalCheck(true)
+                        setSelected(question.id)
+                      }
+                      }
+                    >
+                      <img src={checkImg} alt="Marca pergunta como respondida" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowModalAnswer(true)
+                        setSelected(question.id)
+                      }
+                      }
+                    >
+                      <img src={answerImg} alt="Dar destaque à pergunta" />
+                    </button>
+                  </>
+                )}
                 <button
                   type="button"
                   onClick={() => {
@@ -96,6 +141,24 @@ export function AdminRoom() {
             description='Tem certeza que deseja excluir essa pergunta?'
             show={showModal} onClose={() => setShowModal(false)}
             onToAccept={() => handleDeleteQuestion()} />
+        )
+      }
+      {
+        showModalCheck && (
+          <Modal
+            title='Marcar como respondida'
+            description='Tem certeza que deseja marcar essa pergunta como respondida?'
+            show={showModalCheck} onClose={() => setShowModalCheck(false)}
+            onToAccept={() => handleCheckQuestionAsAnswered()} />
+        )
+      }
+      {
+        showModalAnswer && (
+          <Modal
+            title='Dar destaque à pergunta'
+            description='Tem certeza que deseja dar destaque essa pergunta?'
+            show={showModalAnswer} onClose={() => setShowModalAnswer(false)}
+            onToAccept={() => handleHighlightQuestion()} />
         )
       }
       {
