@@ -1,4 +1,4 @@
-import imgDelete from '../../assets/images/delete.svg';
+import closeImg from '../../assets/images/close.png';
 import { Button } from '../Button';
 import './style.scss';
 
@@ -23,11 +23,11 @@ export default function Modal({ description, show, onClose, title, onToAccept }:
       <div onClick={(event) => event.stopPropagation()} className='container'>
 
 
-        <img src={imgDelete} alt="Imagem de delete" />
+        <img src={closeImg} alt="Imagem de delete" />
         <h1>{title}</h1>
         <p>{description}</p>
         <div>
-          <Button onClick={onClose} >Cancelar</Button>
+          <Button isCancel onClick={onClose} >Cancelar</Button>
           <Button onClick={onToAccept} >Sim</Button>
         </div>
 
