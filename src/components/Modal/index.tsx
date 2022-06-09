@@ -28,7 +28,7 @@ export default function Modal({ description, show, onClose, title, onToAccept }:
         <p>{description}</p>
         <div>
           <Button onClick={onClose} >Cancelar</Button>
-          <Button onClick={onToAccept} >Sim, encerrar</Button>
+          <Button onClick={onToAccept} >Sim</Button>
         </div>
 
 
